@@ -19,16 +19,35 @@ func main() {
 		}
 	}()
 
-	complement := make(map[int]int)
+	var numbers []int
+	// Populate Number Array
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			log.Fatal(err)
 		}
-		if val, ok := complement[line]; ok {
-			fmt.Println(val * line)
+		numbers = append(numbers, line)
+	}
+
+	// Part One:
+	mapnum := make(map[int]int)
+	for _, i := range numbers {
+		if val, ok := mapnum[i]; ok {
+			fmt.Println(val * i)
 		}
-		complement[2020-line] = line
+		mapnum[2020-i] = i
+	}
+
+	// Part Two:
+	for i := 0; i < len(numbers)-2; i++ {
+		target := 2020 - numbers[i]
+		targetMap := make(map[int]int)
+		for j := i + 1; j < len(numbers); j++ {
+			if val, ok := targetMap[numbers[j]]; ok {
+				fmt.Println(numbers[i] * numbers[j] * val)
+			}
+			targetMap[target-numbers[j]] = numbers[j]
+		}
 	}
 }
